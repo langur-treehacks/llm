@@ -4,8 +4,8 @@ from langchain.schema import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from readability import lix_score
-from web import search_and_extract
-from translate import Translator
+from translator import translate_text
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -28,8 +28,7 @@ model = ChatOpenAI(api_key=OPENAI_API)
 chain1 = prompt1 | model | StrOutputParser()
 chain2= prompt2 | model | StrOutputParser()
 query=chain1.invoke({"articles": articles, "language": "spanish"})
-translator= Translator(to_lang="Spanish")
-translation = translator.translate(query)
+translation = translate_text(query)
 print(translation)
 from googlesearch import search
 ans=[]

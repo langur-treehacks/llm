@@ -1,13 +1,9 @@
 import json
 from flask import Flask, request
 from readability import lix_score
-from googletrans import Translator
+from translator import translate_text
 app = Flask(__name__)
 
-def translate_text(text, target_language='es'):
-    translator = Translator()
-    translation = translator.translate(text, dest=target_language)
-    return translation.text
 
 @app.route("/")
 def hello_world():
