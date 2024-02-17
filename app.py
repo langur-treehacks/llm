@@ -1,6 +1,13 @@
 import json
 from flask import Flask, request
+from readability import lix_score
+from googletrans import Translator
 app = Flask(__name__)
+
+def translate_text(text, target_language='es'):
+    translator = Translator()
+    translation = translator.translate(text, dest=target_language)
+    return translation.text
 
 @app.route("/")
 def hello_world():
@@ -23,19 +30,22 @@ def recommend():
 def translate():
     try:
         article= request.json['Article']
-        print(article)
-        articleList= article.split(".")
-        ans=[]
-        for i in range(1,3):
-            target= articleList[i]
-            translation="This is a translated sentence"
-            ans.append([target,translation])
     except:
         return "Article not found",400
     try:
         readability= request.json['Readability']
     except:
         return "readability not found",400
+    articleList= article.split(".")
+    ans=[]
+    for i in range(len(articleList)):
+        target= articleList[i]
+        if not target: 
+            continue
+        score= lix_score(target)
+        if abs(float(score)-float(readability))<1: #THRESHOLD
+            translation= translate_text(target) #STOPS AT UNICODE
+            ans.append([target,translation])
     return json.dumps({"data":ans})
 
 if __name__ == '__main__':  
