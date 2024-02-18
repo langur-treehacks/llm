@@ -35,12 +35,12 @@ def recommend():
     query=monsterapiRecommender(" ".join(searchHistory))
     if query==None:
         query="sports"
-    query= openRouterTranslate(query,"spanish")
+    query= deepTranslator(query,"spanish")
     print("querying with "+ query)
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
 
-@app.route("/meaning", methods=['GET'])
+@app.route("/meaning", methods=['POST'])
 @cross_origin()
 def meaning():
     try:
