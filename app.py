@@ -27,7 +27,9 @@ def recommend():
         readability= request.json['Readability']
     except:
         return "readability not found",400
+    print("starting recommendation")
     query=openAIQuery(searchHistory,"Spanish")
+    print("querying with "+ query)
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
 
@@ -42,6 +44,7 @@ def meaning():
         language= request.json['Language']
     except:
         return "Language not found",400
+    print("translating")
     return openRouterTranslate(target,language) ,200
 
 @app.route("/translate",methods=['POST'])
@@ -60,12 +63,14 @@ def translate():
         return "Article not found",400
     articleList= article.split(".")
     ans=[]
+    print("translating")
     for i in range(len(articleList)):
         target= articleList[i]
         if not target: 
             continue
         score= lix_score(target)
         if abs(float(score)-float(readability))<1: 
+            print("still translating")
             translation= openRouterTranslate(target,lang) 
             # print(translation)
             ans.append([target,translation])
