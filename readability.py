@@ -29,7 +29,7 @@ def lix_score(text):
     lix_score= lixCal(text)
     lix_score = max(6, min(60, lix_score))
     readability_rating = (lix_score / 6)
-    return readability_rating
+    return round(readability_rating,1)
 
 
 if __name__=="__main__":

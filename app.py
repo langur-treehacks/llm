@@ -1,7 +1,8 @@
 import json
 from flask import Flask, request
 from readability import lix_score
-from translator import translate_text
+# from translator import translate_text
+from chromeQuery import searchDB
 app = Flask(__name__)
 
 
@@ -20,7 +21,9 @@ def recommend():
         readability= request.json['Readability']
     except:
         return "readability not found",400
-    return json.dumps({"data":{"summary": "this is a summary of the article", "readability": 3,"link":"https://cnnespanol.cnn.com/2024/02/17/putin-navalny-nombre-amenaza-trax/"}})
+    query="I like sports"#awaiting search history summarizer
+    results= searchDB(query,3,readability)
+    return json.dumps({"data":results})
 
 @app.route("/translate",methods=['POST'])
 def translate():
@@ -39,9 +42,9 @@ def translate():
         if not target: 
             continue
         score= lix_score(target)
-        if abs(float(score)-float(readability))<1: #THRESHOLD
-            translation= translate_text(target) #STOPS AT UNICODE
-            ans.append([target,translation])
+        # if abs(float(score)-float(readability))<1: #THRESHOLD
+        #     translation= translate_text(target) #STOPS AT UNICODE
+        #     ans.append([target,translation])
     return json.dumps({"data":ans})
 
 if __name__ == '__main__':  
