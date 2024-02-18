@@ -2,6 +2,7 @@ import json
 from flask import Flask, request
 from readability import lix_score
 # from translator import translate_text
+from openRouter import openRouterTranslate
 from chromeQuery import searchDB
 app = Flask(__name__)
 
@@ -35,6 +36,10 @@ def translate():
         readability= request.json['Readability']
     except:
         return "readability not found",400
+    try:
+        lang= request.json['Language']
+    except:
+        return "Article not found",400
     articleList= article.split(".")
     ans=[]
     for i in range(len(articleList)):
@@ -42,9 +47,10 @@ def translate():
         if not target: 
             continue
         score= lix_score(target)
-        # if abs(float(score)-float(readability))<1: #THRESHOLD
-        #     translation= translate_text(target) #STOPS AT UNICODE
-        #     ans.append([target,translation])
+        if abs(float(score)-float(readability))<1: 
+            translation= openRouterTranslate(target,lang) 
+            print(translation)
+            ans.append([target,translation])
     return json.dumps({"data":ans})
 
 if __name__ == '__main__':  
