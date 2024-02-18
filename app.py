@@ -6,11 +6,9 @@ from openRouter import openRouterTranslate
 from chromeQuery import searchDB
 app = Flask(__name__)
 
-
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!!</p>"
-
     
 @app.route("/recommend",methods=['POST'])
 def recommend():
@@ -25,9 +23,18 @@ def recommend():
     query="I like sports"#awaiting search history summarizer
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
+
 @app.route("/meaning", methods=['GET'])
 def meaning():
-    return "meaning"
+    try:
+        target= request.json['Target']
+    except:
+        return "Target not found",400
+    try:
+        language= request.json['Language']
+    except:
+        return "Language not found",400
+    return openRouterTranslate(target,language) ,200
 
 @app.route("/translate",methods=['POST'])
 def translate():
@@ -54,7 +61,7 @@ def translate():
             translation= openRouterTranslate(target,lang) 
             # print(translation)
             ans.append([target,translation])
-    return json.dumps({"data":ans})
+    return json.dumps({"data":ans}),200
 
 if __name__ == '__main__':  
    app.run(debug=True)
