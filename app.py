@@ -52,8 +52,7 @@ def meaning():
     except:
         return "Language not found",400
     print("translating")
-    return deepTranslator(target,"spanish"),200
-    #return openRouterTranslate(target,language) ,200
+    return deepTranslator(target,language),200
 
 @app.route("/translate",methods=['POST'])
 @cross_origin()
