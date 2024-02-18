@@ -9,12 +9,15 @@ OPENAI_API= os.getenv('OPENAI_API_KEY_2')
 
 articles=["Hall of Fame coach 'Lefty' Driesell dies at 92","Hall of Fame coach 'Lefty' Driesell dies at 92","Spieth DQ'd from Genesis for signing wrong score"]
 
-prompt1 = ChatPromptTemplate.from_template("Generate a search term tailored to the user's interests, drawing from their past articles. Ensure the suggested term does not replicate any topics covered previously. The user's article history is provided as: {articles}")
+prompt1 = ChatPromptTemplate.from_template("Generate a concise search term tailored to the user's interests, drawing from their past articles. Ensure the suggested term does not replicate any topics covered previously. The user's article history is provided as: {articles}. Return the search term and nothing else")
 model = ChatOpenAI(api_key=OPENAI_API)
 chain1 = prompt1 | model | StrOutputParser()
 
 
-def openAIQuery(language,searchHistory):
+def openAIQuery(searchHistory,language):
     query=chain1.invoke({"articles": articles})
     translation = openRouterTranslate(query, "spanish")
     return translation
+
+if __name__=="__main__":
+    print(openAIQuery("spanish",articles))

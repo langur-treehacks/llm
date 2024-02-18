@@ -3,6 +3,7 @@ from flask import Flask, request
 from readability import lix_score
 # from translator import translate_text
 from openRouter import openRouterTranslate
+from openAIChain import openAIQuery
 from chromeQuery import searchDB
 from flask_cors import CORS, cross_origin
 
@@ -26,7 +27,7 @@ def recommend():
         readability= request.json['Readability']
     except:
         return "readability not found",400
-    query="I like sports"#awaiting search history summarizer
+    query=openAIQuery(searchHistory,"Spanish")
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
 
