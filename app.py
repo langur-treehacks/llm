@@ -7,6 +7,7 @@ from openAIChain import openAIQuery
 from chromeQuery import searchDB
 from flask_cors import CORS, cross_origin
 from deepTranslator import deepTranslator
+from monsterApi import monsterapiInference
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -29,7 +30,11 @@ def recommend():
     except:
         return "readability not found",400
     print("starting recommendation")
-    query=openAIQuery(searchHistory,"Spanish")
+    #query=openAIQuery(searchHistory,"Spanish")
+    query=monsterapiInference(" ".join(searchHistory))
+    if query==None:
+        query="sports"
+    query= openRouterTranslate(query,"spanish")
     print("querying with "+ query)
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
