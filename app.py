@@ -69,6 +69,8 @@ def translate():
             translation= openRouterTranslate(target,lang) 
             # print(translation)
             ans.append([target,translation])
+        if len(ans)==10: 
+            break
     return json.dumps({"data":ans}),200
 
 if __name__ == '__main__':  
