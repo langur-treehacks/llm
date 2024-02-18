@@ -8,3 +8,5 @@ Requests==2.31.0
 serpapi==0.1.5
 together==0.2.11
 trafilatura==1.7.0
+chromadb==0.4.22
+Flask-Cors==4.0.0
