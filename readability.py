@@ -1,24 +1,22 @@
 import re
 import math
 
-def lixCal(text):
-    long_words = 0
-    chars = len(text)
-    text = re.sub(r'[,";]', '', text)
-    text = re.sub(r'\n{2,}', ' ', text)
-    lb = len(text)
-    text = re.sub(r'[!:.?]', '', text)
-    sentences = lb - len(text)
-    if sentences==0:
-        sentences=1
-    word_array = text.split()
-    words = len(word_array)
-    for word in word_array:
-        if len(word) > 6:
-            long_words += 1
-    average_words = math.floor(words / sentences * 10) / 10
-    lix = round(words / sentences + 100 * long_words / words)
-    return lix
+def count_capitals(text):
+    return sum(1 for char in text if char.isupper())
+
+def lixCalculation(text):
+    #replace ?,! with .
+    #text = re.sub(r'[?!,]', '.', text)
+    words=text.split()
+    num_words = len(words)
+    #count number of . : and capital letters
+    num_periods= text.count('.')+ text.count(':')+ count_capitals(text)
+    num_long_words = len([word for word in words if len(word) > 6])
+    if num_periods==0:
+        return 20
+    if num_words==0:
+        return 20
+    return (num_words/num_periods) + (num_long_words * 100 / num_words)
 
 def lix_score(text):
     """
@@ -26,7 +24,8 @@ def lix_score(text):
     :param text: The input text
     :return: The readability rating of the text, between 1 and 10
     """
-    lix_score= lixCal(text)
+    lix_score= lixCalculation(text)
+    # print(lix_score)
     lix_score = max(6, min(60, lix_score))
     readability_rating = (lix_score / 6)
     return round(readability_rating,1)
