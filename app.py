@@ -4,13 +4,19 @@ from readability import lix_score
 # from translator import translate_text
 from openRouter import openRouterTranslate
 from chromeQuery import searchDB
+from flask_cors import CORS, cross_origin
+
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route("/")
+@cross_origin()
 def hello_world():
     return "<p>Hello, World!!</p>"
     
 @app.route("/recommend",methods=['POST'])
+@cross_origin()
 def recommend():
     try:
         searchHistory= request.json['SearchHistory'] #list
@@ -25,6 +31,7 @@ def recommend():
     return json.dumps({"data":results})
 
 @app.route("/meaning", methods=['GET'])
+@cross_origin()
 def meaning():
     try:
         target= request.json['Target']
