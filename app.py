@@ -75,7 +75,7 @@ def translate():
             # translation= openRouterTranslate(target,lang) 
             # print(translation)
             translation= deepTranslator(target,"spanish")
-            ans.append([target,translation])
+            ans.append([target.strip(),translation.strip()])
         if len(ans)==10: 
             break
     return json.dumps({"data":ans}),200
