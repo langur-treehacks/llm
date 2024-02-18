@@ -6,6 +6,7 @@ from openRouter import openRouterTranslate
 from openAIChain import openAIQuery
 from chromeQuery import searchDB
 from flask_cors import CORS, cross_origin
+from deepTranslator import deepTranslator
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -71,8 +72,9 @@ def translate():
         score= lix_score(target)
         if abs(float(score)-float(readability))<1: 
             print("still translating")
-            translation= openRouterTranslate(target,lang) 
+            # translation= openRouterTranslate(target,lang) 
             # print(translation)
+            translation= deepTranslator(target,"spanish")
             ans.append([target,translation])
         if len(ans)==10: 
             break
