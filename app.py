@@ -25,6 +25,9 @@ def recommend():
     query="I like sports"#awaiting search history summarizer
     results= searchDB(query,3,readability)
     return json.dumps({"data":results})
+@app.route("/meaning", methods=['GET'])
+def meaning():
+    return "meaning"
 
 @app.route("/translate",methods=['POST'])
 def translate():
@@ -49,7 +52,7 @@ def translate():
         score= lix_score(target)
         if abs(float(score)-float(readability))<1: 
             translation= openRouterTranslate(target,lang) 
-            print(translation)
+            # print(translation)
             ans.append([target,translation])
     return json.dumps({"data":ans})
 

@@ -5,7 +5,7 @@ collection = client.get_collection(name="data")
 def searchDB(query,n,score):
     output= collection.query(
         query_texts=[query],
-        n_results=3
+        n_results=10
     )
     # print(output)
     for i in range (len(output["metadatas"][0])):
@@ -13,5 +13,7 @@ def searchDB(query,n,score):
     scores= output['metadatas'][0]
     sortedScores= sorted(scores, key=lambda x: abs(x['score']-float(score)))
     return sortedScores[:n]
+    return output
 if __name__ == '__main__':
     print(searchDB("I like sports",2,6.9))
+    print("hello")
