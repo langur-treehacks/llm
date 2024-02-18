@@ -6,9 +6,9 @@ load_dotenv()
 MONSTERAPI_TOKEN= os.getenv('MONSTERAPI_TOKEN')
 
 # Replace this with the actual API endpoint you're targeting
-url = "https://88525734-5bc6-42b4-83a0-c3eaf73e9e52.monsterapi.ai/generate"
 
-def monsterapiInference(prompt):
+def monsterapiRecommender(prompt):
+    url = "https://88525734-5bc6-42b4-83a0-c3eaf73e9e52.monsterapi.ai/generate"
     # The data you want to send in the POST request
     data = {
     "input_variables": {

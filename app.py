@@ -7,7 +7,8 @@ from openAIChain import openAIQuery
 from chromeQuery import searchDB
 from flask_cors import CORS, cross_origin
 from deepTranslator import deepTranslator
-from monsterApi import monsterapiInference
+from monsterApi import monsterapiRecommender
+from openaiChat import openAIChat
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -31,7 +32,7 @@ def recommend():
         return "readability not found",400
     print("starting recommendation")
     #query=openAIQuery(searchHistory,"Spanish")
-    query=monsterapiInference(" ".join(searchHistory))
+    query=monsterapiRecommender(" ".join(searchHistory))
     if query==None:
         query="sports"
     query= openRouterTranslate(query,"spanish")
@@ -51,10 +52,11 @@ def meaning():
     except:
         return "Language not found",400
     print("translating")
-    return deepTranslator(target,"spanish"),2000
+    return deepTranslator(target,"spanish"),200
     #return openRouterTranslate(target,language) ,200
 
 @app.route("/translate",methods=['POST'])
+@cross_origin()
 def translate():
     try:
         article= request.json['Article']
@@ -85,6 +87,29 @@ def translate():
         if len(ans)==10: 
             break
     return json.dumps({"data":ans}),200
+
+conversation=[]
+@app.route("/chat", methods=['POST'])
+@cross_origin()
+def chat():
+    if len(conversation)>10:
+        conversation.pop(0)
+    try:
+        userConversation= request.json['UserConversation'] #first message could be user history
+    except:
+        return "UserConversation not found",400
+    try:
+        readability= request.json['Readability']
+    except:
+        return "Readability not found",400
+    if len(conversation)==0:
+        conversation.append({"role": "system", "content": "You are a friendly conversational agent whose goal is to converse with the user in Spanish. The currently user has a reading ability of "+str(float(readability))+" out of 10. Facilitate the entire conversation in Spanish and in a fun and engaging manner"})
+    print("generating response")
+    for chat in userConversation:
+        conversation.append({"role": "user", "content": chat})
+    response= openAIChat(conversation)
+    conversation.append({"role": "assistant", "content": response})
+    return conversation,200
 
 if __name__ == '__main__':  
    app.run(debug=True)
